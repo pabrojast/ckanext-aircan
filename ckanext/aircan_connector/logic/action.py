@@ -11,7 +11,7 @@ import uuid
 import datetime
 
 from ckan.common import request
-from gcp_handler import GCPHandler
+# from gcp_handler import GCPHandler
 from dag_status_report import DagStatusReport
 import ckan.logic as logic
 import ckan.plugins as p
@@ -211,13 +211,13 @@ def aircan_submit(context, data_dict):
             log.info('AirCan Load completed')
             
             AIRCAN_RESPONSE_AFTER_SUBMIT = {"aircan_status": response.json()}
-        else:
-            log.info("Invoking Airflow on Google Cloud Composer")
-            dag_name = request.params.get('dag_name')
-            if dag_name:
-                config['ckan.airflow.cloud.dag_name'] = dag_name
-            gcp_response = invoke_gcp(config, payload)
-            AIRCAN_RESPONSE_AFTER_SUBMIT = {"aircan_status": gcp_response}
+        # else:
+        #     log.info("Invoking Airflow on Google Cloud Composer")
+        #     dag_name = request.params.get('dag_name')
+        #     if dag_name:
+        #         config['ckan.airflow.cloud.dag_name'] = dag_name
+        #     gcp_response = invoke_gcp(config, payload)
+        #     AIRCAN_RESPONSE_AFTER_SUBMIT = {"aircan_status": gcp_response}
 
         # Update the aircan run status
         p.toolkit.get_action('aircan_status_update')(context,{ 
@@ -237,11 +237,11 @@ def aircan_submit(context, data_dict):
     if REACHED_RESOPONSE == True:
         return AIRCAN_RESPONSE_AFTER_SUBMIT
 
-def invoke_gcp(config, payload):
-    log.info('Invoking GCP')
-    gcp = GCPHandler(config, payload)
-    log.info('Handler created')
-    return gcp.trigger_dag()
+# def invoke_gcp(config, payload):
+#     log.info('Invoking GCP')
+#     gcp = GCPHandler(config, payload)
+#     log.info('Handler created')
+#     return gcp.trigger_dag()
 
 
 def aircan_dag_status(dag_name, dag_run_id):
