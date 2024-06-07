@@ -12,7 +12,7 @@ import datetime
 
 from ckan.common import request
 # from gcp_handler import GCPHandler
-from dag_status_report import DagStatusReport
+# from dag_status_report import DagStatusReport
 import ckan.logic as logic
 import ckan.plugins as p
 import ckan.lib.helpers as h
@@ -25,6 +25,28 @@ log = logging.getLogger(__name__)
 ValidationError = logic.ValidationError
 NotFound = logic.NotFound
 _get_or_bust = logic.get_or_bust
+
+
+class DagStatusReport:
+    def __init__(self, dag_name, dag_run_id, config):
+        self.dag_name = dag_name
+        self.config = config
+        self.dag_run_id = dag_run_id
+
+    def get_local_aircan_report(self):
+        log.info("Building Airflow local status report")
+        ckan_airflow_endpoint_url = self.config.get('ckan.airflow.url')
+        log.info("Airflow Endpoint URL: {0}/{1}".format(ckan_airflow_endpoint_url, self.dag_run_id))
+        response = requests.get('{0}/{1}'.format(ckan_airflow_endpoint_url, self.dag_run_id),
+                                auth=requests.auth.HTTPBasicAuth(
+                                        self.config['ckan.airflow.username'], 
+                                        self.config['ckan.airflow.password']),
+                                 headers={'Content-Type': 'application/json',
+                                          'Cache-Control': 'no-cache'})
+        response.raise_for_status()
+        log.info('Airflow status request completed')
+        return {"success": True, "airflow_api_aircan_status": response.json()}
+
 
 
 NO_SCHEMA_ERROR_MESSAGE = 'Resource <a href="{0}">{1}</a> has no schema so cannot be imported into the DataStore.'\
