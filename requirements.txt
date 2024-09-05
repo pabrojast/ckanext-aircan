@@ -1,6 +1,4 @@
 requests_toolbelt==0.9.1
 grpcio==1.30.0
-google-auth==2.6.2
 requests==2.24.0
-google-cloud-logging
 six>=1.13.0
