@@ -86,7 +86,8 @@ class ResourceDataController(MethodView):
         return toolkit.render('resource_data.html',
                         extra_vars={
                             'status': aircan_status,
-                            'unique_keys': unique_keys
+                            'unique_keys': unique_keys,
+                            'pkg_dict': toolkit.c.pkg_dict
                             })
 
 class ResourceUploadConfigController(MethodView):
