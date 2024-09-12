@@ -87,7 +87,8 @@ class ResourceDataController(MethodView):
                         extra_vars={
                             'status': aircan_status,
                             'unique_keys': unique_keys,
-                            'pkg_dict': toolkit.c.pkg_dict
+                            'pkg_dict': toolkit.c.pkg_dict,
+                            'resource': toolkit.c.resource
                             })
 
 class ResourceUploadConfigController(MethodView):
